@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>NEND:ipmemlimit</id>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<file name="$sourcedir/Subs-Graphics.php">
 		<operation>
 			<search position="replace"><![CDATA[	global $sourcedir;
@@ -22,8 +22,8 @@
 	else
 		$bitDepth = 48; // Probally a bad idea assuming, but 48 bits may be the magic number.
 
-	// How much do we need and how much have we used.
-	$need = round((($sizes[0] * $sizes[1] * $bitDepth) + memory_get_usage()) / 1048576);
+	// How much do we need and how much have we used. 8 bits to bytes, 65536 64k and 1.8 to add a little extra.
+	$need = round(((($sizes[0] * $sizes[1] * $bitDepth / 8) + 65536 + memory_get_usage()) * 1.8) / 1048576);
 	$have = (int) ini_get('memory_limit');
 
 	// We need to set a hard limit, can't have them using all the memory
