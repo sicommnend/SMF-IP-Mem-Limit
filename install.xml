@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>NEND:ipmemlimit</id>
+	<version>0.0.1</version>
+	<file name="$sourcedir/Subs-Graphics.php">
+		<operation>
+			<search position="replace"><![CDATA[	global $sourcedir;
+
+	// Nothing to do without GD]]></search>
+			<add><![CDATA[	global $sourcedir, $modSettings;
+
+	// Nothing to do without GD}]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[	// Gif? That might mean trouble if gif support is not available.]]></search>
+			<add><![CDATA[
+	//Image Processing Memory Limit
+	$limit = round((($sizes[0] * $sizes[1] * 4) / 1000000) + 10); // Figure out requirements with a little overhead
+	$cur = str_replace(' ','',strtoupper(ini_get('memory_limit')));
+	if (strstr($cur, 'G',true))
+		$cur = $cur * 1024;
+	else
+		$cur = substr($cur,0,-1);
+
+	if ($limit > $modSettings['ipmemlimit'])
+		return false; // Not even going to try
+	elseif ($limit > $cur) {
+		if(ini_set('memory_limit', $limit.'M') === false)
+			return false; // Server rejected
+		if (ini_get('memory_limit') != $limit.'M')
+			return false; // Server rejected silently.
+	}
+]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/ManageSettings.php">
+		<operation>
+			<search position="replace"><![CDATA[		// Mod authors, add any settings UNDER this line. Include a comma at the end of the line and don't remove this statement!!]]></search>
+			<add><![CDATA[		// Mod authors, add any settings UNDER this line. Include a comma at the end of the line and don't remove this statement!!
+		array('int', 'ipmemlimit'),]]></add>
+		</operation>
+	</file>
+	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end"></search>
+			<add><![CDATA[
+$txt['ipmemlimit'] = 'Image Processing Memory limit';
+]]></add>
+		</operation>
+	</file>
+</modification>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>NEND:ipmemlimit</id>
+	<name>Image Processing Memory Limit</name>
+	<version>0.0.1</version>
+	<type>modification</type>
+	<install>
+		<readme parsebbc="true">license.txt</readme>
+		<code>install.php</code>
+		<modification format="xml" type="file">install.xml</modification>
+	</install>
+	<uninstall>
+		<modification reverse="true">install.xml</modification>
+	</uninstall>
+</package-info>
