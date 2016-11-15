@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>NEND:ipmemlimit</id>
 	<name>Image Processing Memory Limit</name>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<type>modification</type>
 	<install>
 		<readme parsebbc="true">license.txt</readme>

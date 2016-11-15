@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>NEND:ipmemlimit</id>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<file name="$sourcedir/Subs-Graphics.php">
 		<operation>
 			<search position="replace"><![CDATA[	global $sourcedir;
@@ -15,20 +15,26 @@
 		<operation>
 			<search position="after"><![CDATA[	// Gif? That might mean trouble if gif support is not available.]]></search>
 			<add><![CDATA[
-	//Image Processing Memory Limit
-	$limit = round((($sizes[0] * $sizes[1] * 4) / 1000000) + 10); // Figure out requirements with a little overhead
-	$cur = str_replace(' ','',strtoupper(ini_get('memory_limit')));
-	if (strstr($cur, 'G',true))
-		$cur = $cur * 1024;
+	// Image Processing Memory Limit
+	// Do we know the bit depth?
+	if (!empty($sizes['bits']) && !empty($sizes['channels']))
+		$bitDepth = $sizes['bits'] * $sizes['channels'];
 	else
-		$cur = substr($cur,0,-1);
+		$bitDepth = 48; // Probally a bad idea assuming, but 48 bits may be the magic number.
 
-	if ($limit > $modSettings['ipmemlimit'])
-		return false; // Not even going to try
-	elseif ($limit > $cur) {
-		if(ini_set('memory_limit', $limit.'M') === false)
+	// How much do we need and how much have we used.
+	$need = round((($sizes[0] * $sizes[1] * $bitDepth) + memory_get_usage()) / 1048576);
+	$have = (int) ini_get('memory_limit');
+
+	// We need to set a hard limit, can't have them using all the memory
+	if ($need > $modSettings['ipmemlimit'])
+		return false;
+
+	// See if the current limit is what we need, if not request more.
+	if ($need > $have) {
+		if(ini_set('memory_limit', $need.'M') === false)
 			return false; // Server rejected
-		if (ini_get('memory_limit') != $limit.'M')
+		if (ini_get('memory_limit') != $need.'M')
 			return false; // Server rejected silently.
 	}
 ]]></add>
