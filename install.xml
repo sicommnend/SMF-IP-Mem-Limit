@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>NEND:ipmemlimit</id>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<file name="$sourcedir/Subs-Graphics.php">
 		<operation>
 			<search position="replace"><![CDATA[	global $sourcedir;
