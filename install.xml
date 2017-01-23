@@ -20,7 +20,7 @@
 	if (!empty($sizes['bits']) && !empty($sizes['channels']))
 		$bitDepth = $sizes['bits'] * $sizes['channels'];
 	else
-		$bitDepth = 48; // Probally a bad idea assuming, but 48 bits may be the magic number.
+		$bitDepth = 96; // Probally a bad idea assuming, was 48 now 96 for 32bpp.
 
 	// How much do we need and how much have we used. 8 bits to bytes, 65536 64k and 1.8 to add a little extra.
 	$need = round(((($sizes[0] * $sizes[1] * $bitDepth / 8) + 65536 + memory_get_usage()) * 1.8) / 1048576);
@@ -30,13 +30,9 @@
 	if ($need > $modSettings['ipmemlimit'])
 		return false;
 
-	// See if the current limit is what we need, if not request more.
-	if ($need > $have) {
-		if(ini_set('memory_limit', $need.'M') === false)
-			return false; // Server rejected
-		if (ini_get('memory_limit') != $need.'M')
-			return false; // Server rejected silently.
-	}
+	// Lets not care how much we have and just set it.
+	if (ini_set('memory_limit', $modSettings['ipmemlimit'].'M') === false && $need > $have)
+		return false; // Server rejected
 ]]></add>
 		</operation>
 	</file>
